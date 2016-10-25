@@ -8,7 +8,7 @@
 
 import UIKit
 
-public enum MonthType { case previous, current, next }
+@objc public enum MonthType: Int { case previous, current, next }
 
 final class DateModel: NSObject {
     

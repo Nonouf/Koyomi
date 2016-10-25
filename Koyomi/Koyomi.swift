@@ -24,7 +24,7 @@ import UIKit
 
 // MARK: - KoyomiStyle -
 
-public enum KoyomiStyle {
+public enum KoyomiStyle: Int {
     case monotone, standard, red, orange, yellow, tealBlue, blue, purple, green, pink
     case deepBlack, deepRed, deepOrange, deepYellow, deepTealBlue, deepBlue, deepPurple, deepGreen, deepPink
     
@@ -61,9 +61,14 @@ public enum KoyomiStyle {
 
 public enum SelectionMode {
     case single(style: Style), multiple(style: Style), sequence(style: SequenceStyle), none
-    
-    public enum SequenceStyle { case background, circle, semicircleEdge }
-    public enum Style { case background, circle }
+
+    public enum SequenceStyle: Int { case background, circle, semicircleEdge }
+    public enum Style: Int { case background, circle }
+}
+
+@objc public enum StrataStyle: Int {
+    case single
+    case range
 }
 
 // MARK: - Koyomi -
@@ -213,7 +218,16 @@ final public class Koyomi: UICollectionView {
     }
     
     // MARK: - Public Methods -
-    
+
+    public func setStrataStyle(style: StrataStyle) {
+        switch style {
+        case .range:
+            self.selectionMode = .sequence(style: .semicircleEdge)
+        default:
+            self.selectionMode = .single(style: .background)
+        }
+    }
+
     public func display(in month: MonthType) {
         model.display(in: month)
         reloadData()
