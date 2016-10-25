@@ -219,12 +219,14 @@ final public class Koyomi: UICollectionView {
     
     // MARK: - Public Methods -
 
-    public func setStrataStyle(style: StrataStyle) {
-        switch style {
-        case .range:
-            self.selectionMode = .sequence(style: .semicircleEdge)
-        default:
-            self.selectionMode = .single(style: .background)
+    public var strataStyle: StrataStyle = .single {
+        didSet {
+            switch strataStyle {
+            case .range:
+                self.selectionMode = .sequence(style: .semicircleEdge)
+            default:
+                self.selectionMode = .single(style: .background)
+            }
         }
     }
 
