@@ -377,26 +377,16 @@ private extension Koyomi {
 // MARK: - UICollectionViewDelegate -
 
 extension Koyomi: UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard indexPath.section != 0 else { return }
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        let previousDate = model.previousDate()
         let date = model.date(at: indexPath)
 
+        print("\t[PREVIOUS DATE] \(previousDate) == \(date) -> \(previousDate == date)");
 
-        let period = model.selectedPeriod(with: indexPath)
-        if case .sequence(_) = selectionMode , calendarDelegate?.koyomi?(self, willSelectPeriod: period, forItemAt: indexPath) == false {
-            return
+        if strataStyle == .single && previousDate == date {
+            return false
         }
 
-        calendarDelegate?.koyomi?(self, didSelect: date, forItemAt: indexPath)
-        
-        if case .none = selectionMode { return }
-        
-        model.select(with: indexPath)
-        reloadData()
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let date = model.date(at: indexPath)
         let calendar = Calendar.current
 
         if let today = calendar.date(byAdding: .day, value: -1, to: Date()) {
@@ -407,6 +397,24 @@ extension Koyomi: UICollectionViewDelegate {
             return false
         }
         return true;
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard indexPath.section != 0 else { return }
+
+        let date = model.date(at: indexPath)
+        let period = model.selectedPeriod(with: indexPath)
+
+        if case .sequence(_) = selectionMode , calendarDelegate?.koyomi?(self, willSelectPeriod: period, forItemAt: indexPath) == false {
+            return
+        }
+
+        calendarDelegate?.koyomi?(self, didSelect: date, forItemAt: indexPath)
+        
+        if case .none = selectionMode { return }
+        
+        model.select(with: indexPath)
+        reloadData()
     }
 }
 

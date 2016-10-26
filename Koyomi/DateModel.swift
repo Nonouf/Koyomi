@@ -24,7 +24,7 @@ final class DateModel: NSObject {
     
     struct SequenceDates { var start: Date?, end: Date? }
     lazy var sequenceDates: SequenceDates = .init(start: nil, end: nil)
-    
+
     // Fileprivate properties
     fileprivate var currentDates: [Date] = []
     fileprivate var selectedDates: [Date: Bool] = [:]
@@ -81,9 +81,25 @@ final class DateModel: NSObject {
     }
     
     func date(at indexPath: IndexPath) -> Date {
+//        print("[C] At \(indexPath.row) ->\n\t\(currentDates)")
+//        print("[S] At \(indexPath.row) ->\n\t\(selectedDates)")
+
         return currentDates[indexPath.row]
     }
-    
+
+    func previousDate() -> Date? {
+        let selectedDate = selectedDates.filter { (date, selected) -> Bool in
+            return selected
+        }
+
+        print("[SELECTED DATE] \(selectedDate)")
+
+        if let previousDate = selectedDate.first?.key {
+            return previousDate
+        }
+        return nil
+    }
+
     func select(from fromDate: Date, to toDate: Date?) {
         if let toDate = toDate?.formated() {
             set(true, withFrom: fromDate, to: toDate)
