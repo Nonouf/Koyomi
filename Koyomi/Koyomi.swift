@@ -274,7 +274,7 @@ final public class Koyomi: UICollectionView {
     
     override public func reloadData() {
         super.reloadData()
-        setCollectionViewLayout(layout, animated: false)
+        setCollectionViewLayout(layout, animated: true)
     }
 }
 
@@ -379,18 +379,34 @@ private extension Koyomi {
 extension Koyomi: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard indexPath.section != 0 else { return }
+        let date = model.date(at: indexPath)
+
 
         let period = model.selectedPeriod(with: indexPath)
         if case .sequence(_) = selectionMode , calendarDelegate?.koyomi?(self, willSelectPeriod: period, forItemAt: indexPath) == false {
             return
         }
 
-        calendarDelegate?.koyomi?(self, didSelect: model.date(at: indexPath), forItemAt: indexPath)
+        calendarDelegate?.koyomi?(self, didSelect: date, forItemAt: indexPath)
         
         if case .none = selectionMode { return }
         
         model.select(with: indexPath)
         reloadData()
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        let date = model.date(at: indexPath)
+        let calendar = Calendar.current
+
+        if let today = calendar.date(byAdding: .day, value: -1, to: Date()) {
+            if date < today  {
+                return false
+            }
+        } else {
+            return false
+        }
+        return true;
     }
 }
 
