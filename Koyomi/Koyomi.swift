@@ -379,15 +379,15 @@ private extension Koyomi {
 extension Koyomi: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard indexPath.section != 0 else { return }
-        
-        calendarDelegate?.koyomi?(self, didSelect: model.date(at: indexPath), forItemAt: indexPath)
-        
-        if case .none = selectionMode { return }
-        
+
         let period = model.selectedPeriod(with: indexPath)
         if case .sequence(_) = selectionMode , calendarDelegate?.koyomi?(self, willSelectPeriod: period, forItemAt: indexPath) == false {
             return
         }
+
+        calendarDelegate?.koyomi?(self, didSelect: model.date(at: indexPath), forItemAt: indexPath)
+        
+        if case .none = selectionMode { return }
         
         model.select(with: indexPath)
         reloadData()
