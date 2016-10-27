@@ -258,6 +258,7 @@ final public class Koyomi: UICollectionView {
     @discardableResult
     public func select(date: Date, to toDate: Date? = nil) -> Self {
         model.select(from: date, to: toDate)
+        reloadData()
         return self
     }
     
@@ -276,6 +277,7 @@ final public class Koyomi: UICollectionView {
     // MARK: - Override Method -
     
     override public func reloadData() {
+        print("RELOAD DATA")
         super.reloadData()
         setCollectionViewLayout(layout, animated: true)
     }
@@ -402,10 +404,7 @@ extension Koyomi: UICollectionViewDelegate {
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        guard strataStyle == .single
-            else {
-                return true
-        }
+        guard strataStyle == .single else { return true }
         
         if let selected = collectionView.cellForItem(at: indexPath)?.isSelected, selected == true {
             return false
