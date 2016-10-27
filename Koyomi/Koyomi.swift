@@ -396,16 +396,6 @@ extension Koyomi: UICollectionViewDelegate {
         if strataStyle == .single && previousDate == date {
             return false
         }
-
-//        let calendar = Calendar.current
-//
-//        if let today = calendar.date(byAdding: .day, value: -1, to: Date()) {
-//            if date < today  {
-//                return false
-//            }
-//        } else {
-//            return false
-//        }
         return true;
     }
 
