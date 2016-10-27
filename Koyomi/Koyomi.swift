@@ -376,6 +376,9 @@ private extension Koyomi {
         } else {
             cell.isUserInteractionEnabled = true
         }
+        
+        cell.isSelected = true
+        selectItem(at: indexPath, animated: true, scrollPosition: [])
     
         cell.configureAppearanse(of: style, withColor: selectedBackgroundColor, backgroundColor: backgroundColor, isSelected: isSelected)
         if let font = font {
@@ -388,15 +391,26 @@ private extension Koyomi {
 
 extension Koyomi: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let previousDate = model.previousDate()
-        let date = model.date(at: indexPath)
+        guard strataStyle == .single else { return true }
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! KoyomiCell
 
-        print("\t[PREVIOUS DATE] \(previousDate) == \(date) -> \(previousDate == date)");
-
-        if strataStyle == .single && previousDate == date {
+        if let selected = collectionView.cellForItem(at: indexPath)?.isSelected, selected == true {
             return false
         }
-        return true;
+        return true
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        guard strataStyle == .single
+            else {
+                return true
+        }
+        
+        if let selected = collectionView.cellForItem(at: indexPath)?.isSelected, selected == true {
+            return false
+        }
+        return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -415,6 +429,7 @@ extension Koyomi: UICollectionViewDelegate {
         
         model.select(with: indexPath)
         reloadData()
+        collectionView.reloadItems(at: [indexPath])
     }
 }
 
