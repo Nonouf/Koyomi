@@ -199,6 +199,9 @@ final public class Koyomi: UICollectionView {
     
     fileprivate var dayLabelFont: UIFont?
     fileprivate var weekLabelFont: UIFont?
+    
+    // Public properties
+    public var minimunDate: Date?
 
     // MARK: - Initialization -
 
@@ -367,6 +370,13 @@ private extension Koyomi {
         // Set cell to appearance properties
         cell.content   = content
         cell.textColor = textColor
+        
+        if let minimunDate = minimunDate, model.date(at: indexPath) < minimunDate {
+            cell.isUserInteractionEnabled = false
+        } else {
+            cell.isUserInteractionEnabled = true
+        }
+    
         cell.configureAppearanse(of: style, withColor: selectedBackgroundColor, backgroundColor: backgroundColor, isSelected: isSelected)
         if let font = font {
             cell.setContentFont(fontName: font.fontName, size: font.pointSize)
@@ -387,15 +397,15 @@ extension Koyomi: UICollectionViewDelegate {
             return false
         }
 
-        let calendar = Calendar.current
-
-        if let today = calendar.date(byAdding: .day, value: -1, to: Date()) {
-            if date < today  {
-                return false
-            }
-        } else {
-            return false
-        }
+//        let calendar = Calendar.current
+//
+//        if let today = calendar.date(byAdding: .day, value: -1, to: Date()) {
+//            if date < today  {
+//                return false
+//            }
+//        } else {
+//            return false
+//        }
         return true;
     }
 
