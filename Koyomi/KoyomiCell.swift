@@ -85,7 +85,6 @@ final class KoyomiCell: UICollectionViewCell {
             
         // isSelected is always true
         case .sequence(let position):
-            
             circularView.isHidden = true
             
             if case .left = position {

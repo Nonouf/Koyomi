@@ -189,7 +189,6 @@ final public class Koyomi: UICollectionView {
 
     // Fileprivate properties
     fileprivate static let cellIdentifier = "KoyomiCell"
-    
     fileprivate lazy var model: DateModel    = .init()
     fileprivate let sectionSeparator: UIView = .init()
     
@@ -226,7 +225,7 @@ final public class Koyomi: UICollectionView {
         didSet {
             switch strataStyle {
             case .range:
-                self.selectionMode = .sequence(style: .semicircleEdge)
+                self.selectionMode = .sequence(style: .background)
             default:
                 self.selectionMode = .single(style: .background)
             }
@@ -258,7 +257,6 @@ final public class Koyomi: UICollectionView {
     @discardableResult
     public func select(date: Date, to toDate: Date? = nil) -> Self {
         model.select(from: date, to: toDate)
-        reloadData()
         return self
     }
     
@@ -277,9 +275,8 @@ final public class Koyomi: UICollectionView {
     // MARK: - Override Method -
     
     override public func reloadData() {
-        print("RELOAD DATA")
         super.reloadData()
-        setCollectionViewLayout(layout, animated: true)
+//        setCollectionViewLayout(layout, animated: true)
     }
 }
 
@@ -321,7 +318,6 @@ private extension Koyomi {
             content = model.weeks[indexPath.row]
             
         } else {
-
             // Configure appearance properties for day cell
             (textColor, isSelected) = {
                 if model.isSelect(with: indexPath) {
@@ -381,7 +377,7 @@ private extension Koyomi {
         
         cell.isSelected = true
         selectItem(at: indexPath, animated: true, scrollPosition: [])
-    
+        
         cell.configureAppearanse(of: style, withColor: selectedBackgroundColor, backgroundColor: backgroundColor, isSelected: isSelected)
         if let font = font {
             cell.setContentFont(fontName: font.fontName, size: font.pointSize)
@@ -392,25 +388,25 @@ private extension Koyomi {
 // MARK: - UICollectionViewDelegate -
 
 extension Koyomi: UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        guard strataStyle == .single else { return true }
-        
-        let cell = collectionView.cellForItem(at: indexPath) as! KoyomiCell
-
-        if let selected = collectionView.cellForItem(at: indexPath)?.isSelected, selected == true {
-            return false
-        }
-        return true
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        guard strataStyle == .single else { return true }
-        
-        if let selected = collectionView.cellForItem(at: indexPath)?.isSelected, selected == true {
-            return false
-        }
-        return true
-    }
+//    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+//        guard strataStyle == .single else { return true }
+//        
+//        let cell = collectionView.cellForItem(at: indexPath) as! KoyomiCell
+//
+//        if let selected = collectionView.cellForItem(at: indexPath)?.isSelected, selected == true {
+//            return false
+//        }
+//        return true
+//    }
+//    
+//    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+//        guard strataStyle == .single else { return true }
+//        
+//        if let selected = collectionView.cellForItem(at: indexPath)?.isSelected, selected == true {
+//            return false
+//        }
+//        return true
+//    }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard indexPath.section != 0 else { return }

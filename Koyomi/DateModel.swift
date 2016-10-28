@@ -81,23 +81,7 @@ final class DateModel: NSObject {
     }
     
     func date(at indexPath: IndexPath) -> Date {
-//        print("[C] At \(indexPath.row) ->\n\t\(currentDates)")
-//        print("[S] At \(indexPath.row) ->\n\t\(selectedDates)")
-
         return currentDates[indexPath.row]
-    }
-
-    func previousDate() -> Date? {
-        let selectedDate = selectedDates.filter { (date, selected) -> Bool in
-            return selected
-        }
-
-        print("[SELECTED DATE] \(selectedDate)")
-
-        if let previousDate = selectedDate.first?.key {
-            return previousDate
-        }
-        return nil
     }
 
     func select(from fromDate: Date, to toDate: Date?) {
@@ -128,7 +112,7 @@ final class DateModel: NSObject {
             selectedDates.forEach { [weak self] date, isSelected in
                 guard let me = self else { return }
                 if selectedDate == date {
-                    me.selectedDates[date] = me.selectedDates[date] == true ? false : true
+                    me.selectedDates[date] = true
                 } else if isSelected {
                     me.selectedDates[date] = false
                 }
@@ -138,12 +122,11 @@ final class DateModel: NSObject {
             selectedDates[date(at: indexPath)] = selectedDates[date(at: indexPath)] == true ? false : true
             
         case .sequence:
-            
             // user has selected nothing
             if sequenceDates.start == nil && sequenceDates.end == nil {
+                selectedDates.forEach({ selectedDates[$0.0] = false })
                 sequenceDates.start = selectedDate
                 selectedDates[selectedDate] = true
-                
             // user has selected sequence date
             } else if let _ = sequenceDates.start, let _ = sequenceDates.end {
                 sequenceDates.start = selectedDate
@@ -153,11 +136,10 @@ final class DateModel: NSObject {
             // user select selected date
             } else if let start = sequenceDates.start , sequenceDates.end == nil && start == selectedDate {
                 sequenceDates.start = nil
-                selectedDates[selectedDate] = false
+                selectedDates[selectedDate] = true
                 
             // user has selected a date
             } else if let start = sequenceDates.start , sequenceDates.end == nil && start != selectedDate {
-                
                 let isSelectedBeforeDay = selectedDate < start
                 
                 let comparisonResult: ComparisonResult
