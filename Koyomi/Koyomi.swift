@@ -200,7 +200,7 @@ final public class Koyomi: UICollectionView {
     fileprivate var weekLabelFont: UIFont?
     
     // Public properties
-    public var minimunDate: Date?
+    public var minimumDate: Date?
 
     // MARK: - Initialization -
 
@@ -369,7 +369,7 @@ private extension Koyomi {
         cell.content   = content
         cell.textColor = textColor
         
-        if let minimunDate = minimunDate, model.date(at: indexPath) < minimunDate {
+        if let minimumDate = minimumDate, model.date(at: indexPath) < minimumDate {
             cell.isUserInteractionEnabled = false
         } else {
             cell.isUserInteractionEnabled = true
