@@ -194,7 +194,13 @@ final class DateModel: NSObject {
 // MARK: - Private Methods -
 
 private extension DateModel {
-    var calendar: Calendar { return Calendar.current }
+    var calendar: Calendar {
+      var calendar = Calendar.current
+
+      calendar.locale = Locale(identifier: "en_US")
+
+      return calendar
+  }
     
     func setup() {
         let selectedDateKeys = selectedDates.keys(of: true)
